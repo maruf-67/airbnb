@@ -1,18 +1,19 @@
 {
 	"name": "air-bnb-clone-backend",
-  	"type": "module",
- 	 "private": true,
- "scripts": {
-  "start": "node src/app.js",
-  "dev": "nodemon src/app.js",       
-  "migrate": "npx prisma migrate dev", 
-  "studio": "npx prisma studio"        
-},
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"start": "node src/app.js",
+		"dev": "nodemon src/app.js",
+		"migrate": "npx prisma migrate dev",
+		"studio": "npx prisma studio"
+	},
 	"dependencies": {
 		"cors": "^2.8.5",
 		"dotenv": "^17.2.3",
 		"express": "^5.1.0",
 		"helmet": "^8.1.0",
+		"mongoose": "^8.20.0",
 		"morgan": "^1.10.1"
 	},
 	"devDependencies": {
@@ -20,7 +21,6 @@
 		"@types/node": "^24.10.1",
 		"cross-env": "^10.1.0",
 		"nodemon": "^3.1.11",
-		"prisma": "^7.0.0",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.9.3"
 	}
