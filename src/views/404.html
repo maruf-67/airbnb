@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <link href="/assets/css/output.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="/" class="text-2xl font-bold text-gray-900">🏠 Airbnb Clone</a>
+                <div class="space-x-4">
+                    <a href="/" class="text-gray-700 hover:text-gray-900">Home</a>
+                    <a href="/docs" class="text-gray-700 hover:text-gray-900">API Docs</a>
+                    <a href="/health" class="text-gray-700 hover:text-gray-900">Health</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 404 Content -->
+    <div class="flex items-center justify-center min-h-[calc(100vh-200px)]">
+        <div class="text-center max-w-md mx-auto px-4">
+            <div class="mb-8">
+                <div class="text-9xl font-bold text-gray-300 mb-4">404</div>
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Oops! Page Not Found</h1>
+                <p class="text-xl text-gray-600 mb-8">
+                    The page you're looking for doesn't exist. It might have been moved, deleted, or you entered the
+                    wrong URL.
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <a href="/"
+                    class="inline-block w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-200 font-medium">
+                    Go Back Home
+                </a>
+                <button onclick="history.back()"
+                    class="inline-block w-full bg-gray-200 text-gray-800 py-3 px-6 rounded-lg hover:bg-gray-300 transition duration-200 font-medium">
+                    Go Back
+                </button>
+            </div>
+
+            <div class="mt-8 text-sm text-gray-500">
+                <p>If you believe this is an error, please contact support.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 mt-12">
+        <div class="container mx-auto px-4 py-8 text-center text-gray-500">
+            <p>&copy; 2025 Airbnb Clone - Learning Express.js Project</p>
+            <p class="mt-2">Built with Express.js, MongoDB, and JWT Authentication</p>
+        </div>
+    </footer>
+</body>
+
+</html>

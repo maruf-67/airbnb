@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airbnb Clone - Home</title>
+    <link href="/assets/css/output.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <%- include('partials/navbar') %>
+
+        <div class="container mx-auto px-4 py-8">
+            <header class="text-center mb-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">🏠 Airbnb Clone</h1>
+                <p class="text-xl text-gray-600 mb-8">Find your perfect stay anywhere in the world</p>
+            </header>
+
+            <main class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Welcome to Our Platform</h2>
+                    <p class="text-gray-600 mb-6">
+                        This is a learning project built with Express.js, MongoDB, and JWT authentication.
+                        The main API will be consumed by a Next.js frontend application.
+                    </p>
+
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-blue-50 p-6 rounded-lg">
+                            <h3 class="text-lg font-semibold text-blue-900 mb-2">🚀 API Endpoints</h3>
+                            <p class="text-blue-700">Explore our RESTful API for authentication, listings, and bookings.
+                            </p>
+                            <a href="/api-docs" class="inline-block mt-3 text-blue-600 hover:text-blue-800 font-medium">
+                                View API Documentation →
+                            </a>
+                        </div>
+
+                        <div class="bg-green-50 p-6 rounded-lg">
+                            <h3 class="text-lg font-semibold text-green-900 mb-2">📊 Database</h3>
+                            <p class="text-green-700">MongoDB database with Mongoose ODM for data persistence.</p>
+                            <a href="http://localhost:8081" target="_blank"
+                                class="inline-block mt-3 text-green-600 hover:text-green-800 font-medium">
+                                Mongo Express GUI →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Project Status</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <span class="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
+                            <span class="text-gray-700">Express.js server setup</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
+                            <span class="text-gray-700">MongoDB connection</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-3 h-3 bg-yellow-500 rounded-full mr-3"></span>
+                            <span class="text-gray-700">Views and styling (in progress)</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-3 h-3 bg-gray-300 rounded-full mr-3"></span>
+                            <span class="text-gray-700">JWT Authentication</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-3 h-3 bg-gray-300 rounded-full mr-3"></span>
+                            <span class="text-gray-700">Listings CRUD</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-3 h-3 bg-gray-300 rounded-full mr-3"></span>
+                            <span class="text-gray-700">Bookings system</span>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <%- include('partials/footer') %>
+</body>
+
+</html>

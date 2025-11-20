@@ -20,7 +20,7 @@ Data flow: Request → Route → Controller → Service/Model → Database (API)
 - **ES Modules**: Use `import/export` syntax (configured in `package.json`)
 - **Environment Variables**: Load via `dotenv` in `src/app.js`, store in `.env`
 - **Database**: Connect using Mongoose in `src/config/db.js` with `MONGO_URI`
-- **Views**: Use EJS for templating, Tailwind CSS for styling (CDN or compiled)
+- **Views**: Use EJS for templating with component-based partials (e.g., `partials/navbar.ejs`, `partials/footer.ejs`), Tailwind CSS compiled from `src/assets/css/main.css` to `output.css`; static HTML for 404 page (`404.html`)
 - **Error Handling**: Centralized in `src/app.js` with error middleware and custom error pages
 - **Routes Structure**: Mount feature routes in `src/routes/index.js` (e.g., `router.use('/users', userRoutes)`)
 - **API Routes**: Prefix with `/api/` (e.g., `/api/auth/login`)
@@ -29,11 +29,12 @@ Data flow: Request → Route → Controller → Service/Model → Database (API)
 
 ## Developer Workflows
 - **Install Dependencies**: `pnpm install`
+- **Build CSS**: `pnpm run build:css` (compiles Tailwind CSS)
 - **Start Development Server**: `pnpm run dev` (uses nodemon for auto-reload)
 - **Start Production Server**: `pnpm start`
 - **Database Setup**: `docker-compose up` to start MongoDB and Mongo Express GUI
 - **Database GUI**: Access at http://localhost:8081 after starting containers
-- **View Development**: Edit EJS files in `src/views/`, refresh browser for Tailwind changes
+- **View Development**: Edit EJS files in `src/views/`, run `build:css` for Tailwind changes
 
 ## Integration Points
 - **MongoDB**: Local instance via Docker, connection string in `.env`
@@ -48,7 +49,7 @@ Data flow: Request → Route → Controller → Service/Model → Database (API)
 3. Create route file in `src/routes/` (e.g., `users.js`)
 4. Mount route in `src/routes/index.js`
 5. Use services in `src/services/` for complex business logic
-6. For views: Create EJS template in `src/views/`, add route in `src/routes/index.js`
+6. For views: Create EJS template in `src/views/`, include shared partials (navbar/footer), add route in `src/routes/index.js`
 
 Example model structure:
 ```javascript
@@ -88,13 +89,17 @@ Example EJS view (src/views/index.ejs):
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= title %></title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Airbnb Clone - Home</title>
+  <link href="/assets/css/output.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
+<body class="bg-gray-50 min-h-screen">
+  <%- include('partials/navbar') %>
+  
   <div class="container mx-auto p-4">
     <h1 class="text-2xl font-bold">Welcome to Airbnb Clone</h1>
   </div>
+  
+  <%- include('partials/footer') %>
 </body>
 </html>
 ```

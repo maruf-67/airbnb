@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title || 'API Documentation' %>
+    </title>
+    <link href="/assets/css/output.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-50 min-h-screen">
+    <%- include('partials/navbar') %>
+
+        <div class="container mx-auto px-4 py-8">
+            <header class="text-center mb-12">
+                <h1 class="text-3xl font-bold text-gray-900 mb-4">📚 API Documentation</h1>
+                <p class="text-xl text-gray-600">Airbnb Clone Backend API Reference</p>
+            </header>
+
+            <main class="max-w-4xl mx-auto">
+                <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">🚀 Getting Started</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">Base URL</h3>
+                            <code class="bg-gray-100 px-3 py-1 rounded text-sm">http://localhost:3050</code>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-medium text-gray-900">Authentication</h3>
+                            <p class="text-gray-600">Most endpoints require JWT authentication. Include the token in the
+                                Authorization header:</p>
+                            <code
+                                class="block bg-gray-100 p-3 rounded text-sm mt-2">Authorization: Bearer &lt;your-jwt-token&gt;</code>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-8 mb-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">📋 Available Endpoints</h2>
+
+                    <!-- Health Check -->
+                    <div class="mb-6">
+                        <h3 class="text-xl font-medium text-gray-900 mb-3">Health Check</h3>
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex items-center mb-2">
+                                <span
+                                    class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium mr-2">GET</span>
+                                <code class="text-gray-900">/health</code>
+                            </div>
+                            <p class="text-gray-600 text-sm">Check if the API is running</p>
+                        </div>
+                    </div>
+
+                    <!-- Authentication (Coming Soon) -->
+                    <div class="mb-6">
+                        <h3 class="text-xl font-medium text-gray-900 mb-3">Authentication</h3>
+                        <div class="space-y-3">
+                            <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                                <div class="flex items-center mb-2">
+                                    <span
+                                        class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-medium mr-2">POST</span>
+                                    <code class="text-gray-900">/api/auth/register</code>
+                                    <span class="ml-auto text-yellow-600 text-sm">Coming Soon</span>
+                                </div>
+                                <p class="text-gray-600 text-sm">Register a new user</p>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                                <div class="flex items-center mb-2">
+                                    <span
+                                        class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-medium mr-2">POST</span>
+                                    <code class="text-gray-900">/api/auth/login</code>
+                                    <span class="ml-auto text-yellow-600 text-sm">Coming Soon</span>
+                                </div>
+                                <p class="text-gray-600 text-sm">Login and get JWT token</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Listings (Coming Soon) -->
+                    <div class="mb-6">
+                        <h3 class="text-xl font-medium text-gray-900 mb-3">Listings</h3>
+                        <div class="space-y-3">
+                            <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                                <div class="flex items-center mb-2">
+                                    <span
+                                        class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium mr-2">GET</span>
+                                    <code class="text-gray-900">/api/listings</code>
+                                    <span class="ml-auto text-yellow-600 text-sm">Coming Soon</span>
+                                </div>
+                                <p class="text-gray-600 text-sm">Get all listings</p>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                                <div class="flex items-center mb-2">
+                                    <span
+                                        class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-medium mr-2">POST</span>
+                                    <code class="text-gray-900">/api/listings</code>
+                                    <span class="ml-auto text-yellow-600 text-sm">Coming Soon</span>
+                                </div>
+                                <p class="text-gray-600 text-sm">Create a new listing (requires auth)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bookings (Coming Soon) -->
+                    <div class="mb-6">
+                        <h3 class="text-xl font-medium text-gray-900 mb-3">Bookings</h3>
+                        <div class="space-y-3">
+                            <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                                <div class="flex items-center mb-2">
+                                    <span
+                                        class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm font-medium mr-2">GET</span>
+                                    <code class="text-gray-900">/api/bookings</code>
+                                    <span class="ml-auto text-yellow-600 text-sm">Coming Soon</span>
+                                </div>
+                                <p class="text-gray-600 text-sm">Get user bookings (requires auth)</p>
+                            </div>
+                            <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
+                                <div class="flex items-center mb-2">
+                                    <span
+                                        class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm font-medium mr-2">POST</span>
+                                    <code class="text-gray-900">/api/bookings</code>
+                                    <span class="ml-auto text-yellow-600 text-sm">Coming Soon</span>
+                                </div>
+                                <p class="text-gray-600 text-sm">Create a new booking (requires auth)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-md p-8">
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">🔄 Status Updates</h2>
+                    <p class="text-gray-600 mb-4">
+                        This documentation will be automatically updated as new endpoints are implemented.
+                        Check back regularly for the latest API changes.
+                    </p>
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <p class="text-blue-800">
+                            <strong>Note:</strong> Full Swagger/OpenAPI documentation will be available at
+                            <code class="bg-blue-100 px-2 py-1 rounded text-sm">/api-docs</code> once implemented.
+                        </p>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <%- include('partials/footer') %>
+</body>
+
+</html>
