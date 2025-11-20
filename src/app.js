@@ -22,14 +22,16 @@ app.use(express.urlencoded({
 
 // Routes
 app.use(router);
-app.use('/', (req, res, next) => {
-    console.log(req.url, req.method);
-    next();
-});
 
 app.get('/', (req, res, next) => {
     console.log(req.url, req.method);
     res.send('Welcome to the Airbnb API');
+
+});
+
+// 404 handler
+app.use((req, res, next) => {
+    res.status(404).send('Route not found');
 
 });
 
