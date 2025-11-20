@@ -3,7 +3,10 @@ import cors from 'cors';
 // import helmet from 'helmet';
 // import morgan from 'morgan';
 import dotenv from 'dotenv';
-import path from 'path';
+import {
+    getViewsPath,
+    getAssetsPath
+} from './utils/pathUtils.js';
 import router from './routes/index.js';
 
 // Load environment variables
@@ -14,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 
 // Set view engine
 app.set('view engine', 'ejs');
-app.set('views', path.join(process.cwd(), 'src', 'views'));
+app.set('views', getViewsPath());
 
 // Middleware
 // app.use(helmet());
@@ -26,14 +29,14 @@ app.use(express.urlencoded({
 }));
 
 // Serve static assets
-app.use('/assets', express.static(path.join(process.cwd(), 'src', 'assets')));
+app.use('/assets', express.static(getAssetsPath()));
 
 // Routes
 app.use(router);
 
 // 404 handler
 app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(process.cwd(), 'src', 'views', '404.html'));
+    res.status(404).sendFile(getViewsPath('404.html'));
 });
 
 // Error handling middleware

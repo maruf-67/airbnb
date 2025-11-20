@@ -9,7 +9,7 @@ This is an Express.js backend API for an Airbnb clone, using MongoDB with Mongoo
 - **Models**: `src/models/` - Mongoose schemas and models (currently empty)
 - **Services**: `src/services/` - Business logic layer (currently empty)
 - **Middlewares**: `src/middlewares/` - Custom middleware functions (currently empty)
-- **Utils**: `src/utils/` - Utility functions (currently empty)
+- **Utils**: `src/utils/` - Utility functions (e.g., `pathUtils.js` for centralized path management)
 - **Views**: `src/views/` - EJS templates for home, error, and docs pages with Tailwind CSS
 - **Config**: `src/config/db.js` - Database connection setup
 - **Docs**: `src/docs/` - Planning, workflow, and database design documentation
@@ -22,7 +22,7 @@ Data flow: Request → Route → Controller → Service/Model → Database (API)
 - **Database**: Connect using Mongoose in `src/config/db.js` with `MONGO_URI`
 - **Views**: Use EJS for templating with component-based partials (e.g., `partials/navbar.ejs`, `partials/footer.ejs`), Tailwind CSS compiled from `src/assets/css/main.css` to `output.css`; static HTML for 404 page (`404.html`)
 - **Error Handling**: Centralized in `src/app.js` with error middleware and custom error pages
-- **Routes Structure**: Mount feature routes in `src/routes/index.js` (e.g., `router.use('/users', userRoutes)`)
+- **Path Management**: Use `src/utils/pathUtils.js` for all directory resolutions (e.g., `getViewsPath()`, `getAssetsPath()`) to ensure portability
 - **API Routes**: Prefix with `/api/` (e.g., `/api/auth/login`)
 - **Validation**: Use Joi for input validation in controllers
 - **Authentication**: JWT tokens with bcrypt for password hashing

@@ -5,9 +5,7 @@
 	"scripts": {
 		"start": "node src/app.js",
 		"dev": "nodemon src/app.js",
-		"build:css": "tailwindcss -i ./src/assets/css/main.css -o ./src/assets/css/output.css --watch",
-		"migrate": "npx prisma migrate dev",
-		"studio": "npx prisma studio"
+		"build:css": "tailwindcss -i ./src/assets/css/main.css -o ./src/assets/css/output.css --watch"
 	},
 	"dependencies": {
 		"@tailwindcss/cli": "^4.1.17",
