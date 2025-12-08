@@ -1,105 +1,106 @@
 # Copilot Instructions for Airbnb Clone Backend
 
 ## Architecture Overview
-This is an Express.js backend API for an Airbnb clone, using MongoDB with Mongoose for data persistence. The app follows a modular structure with separation of concerns and includes minimal views for home, error, and API documentation pages styled with Tailwind CSS:
+This is an Express.js backend API for an Airbnb clone, using MongoDB with Mongoose for data persistence. The app follows a **feature-based modular structure** with separation of concerns:
 
-- **Entry Point**: `src/app.js` - Sets up Express server, middleware, routes, and view engine (EJS)
-- **Routes**: `src/routes/index.js` - Central router mounting point for API endpoints
-- **Controllers**: `src/controllers/` - Handle request/response logic (currently empty)
-- **Models**: `src/models/` - Mongoose schemas and models (currently empty)
-- **Services**: `src/services/` - Business logic layer (currently empty)
-- **Middlewares**: `src/middlewares/` - Custom middleware functions (currently empty)
-- **Utils**: `src/utils/` - Utility functions (e.g., `pathUtils.js` for centralized path management)
+- **Entry Point**: `src/app.js` - Sets up Express server, middleware, routes, view engine (EJS), and global error handling
+- **Modules**: `src/modules/` - Feature-based modules (e.g., `auth/`) containing controller, service, schema, routes, and models
+- **Common**: `src/common/` - Shared utilities and middlewares
+  - `common/utils/` - `catchAsync.js`, `AppError.js`, `pathUtils.js`
+  - `common/middlewares/` - `validate.js`, `errorHandler.js`, `auth.js`
+- **Routes**: `src/routes/index.js` - Central router mounting point for all module routes
 - **Views**: `src/views/` - EJS templates for home, error, and docs pages with Tailwind CSS
-- **Config**: `src/config/db.js` - Database connection setup
+- **Config**: `src/config/` - Database (`db.js`) and Redis (`redis.js`) connection setup
 - **Docs**: `src/docs/` - Planning, workflow, and database design documentation
 
-Data flow: Request → Route → Controller → Service/Model → Database (API) or View Rendering (Pages)
+**Data flow**: Request → Route → Validation Middleware → Controller → Service → Model → Database
 
 ## Key Patterns & Conventions
 - **ES Modules**: Use `import/export` syntax (configured in `package.json`)
 - **Environment Variables**: Load via `dotenv` in `src/app.js`, store in `.env`
 - **Database**: Connect using Mongoose in `src/config/db.js` with `MONGO_URI`
-- **Views**: Use EJS for templating with component-based partials (e.g., `partials/navbar.ejs`, `partials/footer.ejs`), Tailwind CSS compiled from `src/assets/css/main.css` to `output.css`; static HTML for 404 page (`404.html`)
-- **Error Handling**: Centralized in `src/app.js` with error middleware and custom error pages
-- **Path Management**: Use `src/utils/pathUtils.js` for all directory resolutions (e.g., `getViewsPath()`, `getAssetsPath()`) to ensure portability
+- **Feature Modules**: Group by feature (e.g., `modules/auth/`) containing:
+  - `*.schema.js` - Zod validation schemas with OpenAPI metadata
+  - `*.service.js` - Business logic (DB operations, no req/res)
+  - `*.controller.js` - HTTP handlers (thin, delegates to service)
+  - `*.routes.js` - Route definitions with validation middleware
+  - `*.model.js` - Mongoose models (if feature-specific)
+- **Validation Patterns**:
+  - Use regex for email validation: `/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/`
+  - Define common regex patterns at the top of schema files
+- **Error Handling**: 
+  - Use `catchAsync` wrapper to eliminate try/catch blocks
+  - Throw `AppError` for operational errors (404, 401, 403, etc.)
+  - Global error handler in `common/middlewares/errorHandler.js` handles Zod, Mongo, and custom errors
+- **Validation**: Use `validate` middleware with Zod schemas (auto-forwards errors to global handler)
+- **Path Management**: Use `common/utils/pathUtils.js` for all directory resolutions
 - **API Routes**: Prefix with `/api/` (e.g., `/api/auth/login`)
-- **Validation**: Use Joi for input validation in controllers
-- **Authentication**: JWT tokens with bcrypt for password hashing
+- **Authentication**: JWT tokens with bcrypt, `authenticateToken` and `authorizeRoles` middlewares
 
 ## Developer Workflows
 - **Install Dependencies**: `pnpm install`
 - **Build CSS**: `pnpm run build:css` (compiles Tailwind CSS)
 - **Start Development Server**: `pnpm run dev` (uses nodemon for auto-reload)
 - **Start Production Server**: `pnpm start`
-- **Database Setup**: `docker-compose up` to start MongoDB and Mongo Express GUI
-- **Database GUI**: Access at http://localhost:8081 after starting containers
-- **View Development**: Edit EJS files in `src/views/`, run `build:css` for Tailwind changes
-
-## Integration Points
-- **MongoDB**: Local instance via Docker, connection string in `.env`
-- **CORS/Helmet/Morgan**: Middleware commented out in `src/app.js` - uncomment as needed
-- **Prisma Scripts**: `migrate` and `studio` scripts exist but unused (project uses Mongoose instead)
-- **Testing**: Jest/Supertest for automated tests in `tests/` folder
-- **Documentation**: Swagger/OpenAPI for API docs at `/api-docs`
+- **Database Setup**:
+  - Start MongoDB: `sudo systemctl start mongod`
+  - Check status: `sudo systemctl status mongod`
+  - Ensure MongoDB is running on `127.0.0.1:27017` before starting the app
 
 ## Adding Features
-1. Create Mongoose model in `src/models/` (e.g., `User.js`)
-2. Add controller in `src/controllers/` (e.g., `userController.js`)
-3. Create route file in `src/routes/` (e.g., `users.js`)
-4. Mount route in `src/routes/index.js`
-5. Use services in `src/services/` for complex business logic
-6. For views: Create EJS template in `src/views/`, include shared partials (navbar/footer), add route in `src/routes/index.js`
+1. Create a new module folder in `src/modules/` (e.g., `modules/properties/`)
+2. Add files:
+   - `properties.schema.js` - Zod validation schemas
+   - `properties.model.js` - Mongoose model
+   - `properties.service.js` - Business logic (uses `AppError` for errors)
+   - `properties.controller.js` - Controllers (use `catchAsync` wrapper)
+   - `properties.routes.js` - Routes with `validate` middleware
+3. Mount routes in `src/routes/index.js`: `router.use('/api/properties', propertiesRouter);`
 
-Example model structure:
+**Example Module Structure**:
 ```javascript
-import mongoose from 'mongoose';
+// modules/properties/properties.schema.js
+import { z } from 'zod';
+import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  // ... other fields
-}, { timestamps: true });
+extendZodWithOpenApi(z);
 
-export default mongoose.model('User', userSchema);
-```
+// Common regex patterns
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-Example controller pattern:
-```javascript
-export const getUsers = async (req, res, next) => {
-  try {
-    const users = await User.find();
-    res.json(users);
-  } catch (error) {
-    next(error);
-  }
-};
-```
-
-Example view route:
-```javascript
-// In src/routes/index.js
-router.get('/', (req, res) => {
-  res.render('index', { title: 'Airbnb Clone' });
+export const CreatePropertySchema = z.object({
+  title: z.string().min(5).max(100),
+  price: z.number().positive(),
+  contactEmail: z.string().regex(EMAIL_REGEX, 'Invalid email address'),
 });
-```
 
-Example EJS view (src/views/index.ejs):
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Airbnb Clone - Home</title>
-  <link href="/assets/css/output.css" rel="stylesheet">
-</head>
-<body class="bg-gray-50 min-h-screen">
-  <%- include('partials/navbar') %>
-  
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold">Welcome to Airbnb Clone</h1>
-  </div>
-  
-  <%- include('partials/footer') %>
-</body>
-</html>
+// modules/properties/properties.service.js
+import { AppError } from '../../common/utils/AppError.js';
+import Property from './properties.model.js';
+
+export const createProperty = async (data, userId) => {
+  if (!userId) throw new AppError('User not authenticated', 401);
+  const property = await Property.create({ ...data, owner: userId });
+  return property;
+};
+
+// modules/properties/properties.controller.js
+import { catchAsync } from '../../common/utils/catchAsync.js';
+import * as PropertyService from './properties.service.js';
+
+export const create = catchAsync(async (req, res) => {
+  const property = await PropertyService.createProperty(req.body, req.user.id);
+  res.status(201).json({ success: true, data: property });
+});
+
+// modules/properties/properties.routes.js
+import { Router } from 'express';
+import { validate } from '../../common/middlewares/validate.js';
+import { authenticateToken } from '../../common/middlewares/auth.js';
+import * as Controller from './properties.controller.js';
+import { CreatePropertySchema } from './properties.schema.js';
+
+const router = Router();
+router.post('/', authenticateToken, validate(CreatePropertySchema), Controller.create);
+export default router;
 ```

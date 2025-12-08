@@ -1,10 +1,12 @@
 import express from 'express';
-// import userRoutes from './users.js';
+import authModuleRouter from '../modules/auth/auth.routes.js';
+// import userModuleRouter from '../modules/auth/user.routes.js';
 
 const router = express.Router();
 
-// Mount routes
-// router.use('/users', userRoutes);
+// Mount module routers
+router.use('/api/auth', authModuleRouter);
+// router.use('/api/users', userModuleRouter);
 
 // Home page
 router.get('/', (req, res) => {
