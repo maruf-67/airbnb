@@ -33,6 +33,10 @@ This is an Express.js backend API for an Airbnb clone, using MongoDB with Mongoo
   - Throw `AppError` for operational errors (404, 401, 403, etc.)
   - Global error handler in `common/middlewares/errorHandler.js` handles Zod, Mongo, and custom errors
 - **Validation**: Use `validate` middleware with Zod schemas (auto-forwards errors to global handler)
+- **Response Utilities**: Use `sendSuccess()` from `common/utils/response.js` for consistent API responses
+  - `sendSuccess(res, data)` - 200 OK
+  - `sendSuccess(res, data, 'Message')` - 200 with message
+  - `sendSuccess(res, data, 'Created', 201)` - 201 Created
 - **Path Management**: Use `common/utils/pathUtils.js` for all directory resolutions
 - **API Routes**: Prefix with `/api/` (e.g., `/api/auth/login`)
 - **Authentication**: JWT tokens with bcrypt, `authenticateToken` and `authorizeRoles` middlewares
@@ -86,11 +90,12 @@ export const createProperty = async (data, userId) => {
 
 // modules/properties/properties.controller.js
 import { catchAsync } from '../../common/utils/catchAsync.js';
+import { sendSuccess } from '../../common/utils/response.js';
 import * as PropertyService from './properties.service.js';
 
 export const create = catchAsync(async (req, res) => {
   const property = await PropertyService.createProperty(req.body, req.user.id);
-  res.status(201).json({ success: true, data: property });
+  sendSuccess(res, property, 'Property created successfully', 201);
 });
 
 // modules/properties/properties.routes.js
