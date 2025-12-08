@@ -27,7 +27,18 @@ This is an Express.js backend API for an Airbnb clone, using MongoDB with Mongoo
   - `*.model.js` - Mongoose models (if feature-specific)
 - **Validation Patterns**:
   - Use regex for email validation: `/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/`
+  - Strong password requirements: `/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d@$!%*?&]{8,}$/`
   - Define common regex patterns at the top of schema files
+  - Use Zod transforms for input normalization (lowercase, trim, etc.)
+- **Database Optimization**:
+  - Email field indexed for fast lookups
+  - Password field excluded from queries by default (`select: false`)
+  - Pre-save hooks for data normalization
+- **Security**:
+  - Bcrypt with cost factor 12 for password hashing
+  - JWT tokens with configurable expiration (default: 7d)
+  - Input sanitization and validation at multiple layers
+  - Consider rate limiting for auth endpoints (login/register)
 - **Error Handling**: 
   - Use `catchAsync` wrapper to eliminate try/catch blocks
   - Throw `AppError` for operational errors (404, 401, 403, etc.)
