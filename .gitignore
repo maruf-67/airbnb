@@ -18,3 +18,6 @@ node_modules/
 
 # Optional npm cache directory
 .npm
+
+# css
+/src/assets/css/output.css
