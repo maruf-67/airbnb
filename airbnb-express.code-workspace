@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../Next/airbnb-front"
+		},
+		{
+			"path": "../../../../../var/www/laravel/laravel-modular/lara-api-starter"
 		}
 	],
 	"settings": {}

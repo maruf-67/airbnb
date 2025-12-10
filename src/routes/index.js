@@ -1,11 +1,13 @@
 import express from 'express';
 import authModuleRouter from '../modules/auth/auth.routes.js';
+import roleModuleRouter from '../modules/role/role.routes.js';
 // import userModuleRouter from '../modules/auth/user.routes.js';
 
 const router = express.Router();
 
 // Mount module routers
 router.use('/api/auth', authModuleRouter);
+router.use('/api/roles', roleModuleRouter);
 // router.use('/api/users', userModuleRouter);
 
 // Home page

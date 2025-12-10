@@ -23,9 +23,8 @@ const userSchema = new mongoose.Schema({
         select: false // Don't include password in queries by default
     },
     role: {
-        type: String,
-        enum: ['user', 'admin'],
-        default: 'user'
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Role'
     },
     avatar: {
         type: String,
@@ -40,6 +39,20 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    refreshTokens: [{
+        token: {
+            type: String,
+            required: true
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+        expiresAt: {
+            type: Date,
+            required: true
+        }
+    }]
 }, {
     timestamps: true
 });

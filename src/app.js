@@ -17,6 +17,9 @@ import morgan from 'morgan';
 // Environment variable loader (.env)
 import dotenv from 'dotenv';
 
+// Middleware for parsing cookies
+import cookieParser from 'cookie-parser';
+
 // Custom functions to get view & static asset paths
 import {
     getViewsPath,
@@ -84,6 +87,7 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
+app.use(cookieParser());
 
 
 // -------------------------------
