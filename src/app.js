@@ -4,6 +4,7 @@
 
 // Core express framework for handling server & routes
 import express from 'express';
+import { fileURLToPath } from 'url';
 
 // CORS middleware to allow cross-origin API calls
 import cors from 'cors';
@@ -126,18 +127,21 @@ app.use(globalErrorHandler);
 // Start Server Only After
 // Successful MongoDB Connection
 // -------------------------------
-connectDB()
-    .then(() => {
-        // Start listening on given port
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
+// Only start server if run directly (not imported)
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+    connectDB()
+        .then(() => {
+            // Start listening on given port
+            app.listen(PORT, () => {
+                console.log(`Server is running on port ${PORT}`);
+            });
+        })
+        .catch((err) => {
+            // If DB fails → stop the app
+            console.error('Failed to connect to database:', err);
+            process.exit(1);
         });
-    })
-    .catch((err) => {
-        // If DB fails → stop the app
-        console.error('Failed to connect to database:', err);
-        process.exit(1);
-    });
+}
 
 
 // Export express instance (important for testing)

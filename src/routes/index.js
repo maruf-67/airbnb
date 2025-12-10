@@ -4,11 +4,15 @@ import roleModuleRouter from '../modules/role/role.routes.js';
 // import userModuleRouter from '../modules/auth/user.routes.js';
 
 const router = express.Router();
+const apiV1Router = express.Router();
 
-// Mount module routers
-router.use('/api/auth', authModuleRouter);
-router.use('/api/roles', roleModuleRouter);
-// router.use('/api/users', userModuleRouter);
+// Mount module routers to V1
+apiV1Router.use('/auth', authModuleRouter);
+apiV1Router.use('/roles', roleModuleRouter);
+// apiV1Router.use('/users', userModuleRouter);
+
+// Register V1 Router
+router.use('/api/v1', apiV1Router);
 
 // Home page
 router.get('/', (req, res) => {

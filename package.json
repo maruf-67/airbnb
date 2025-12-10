@@ -5,12 +5,14 @@
 	"scripts": {
 		"start": "node src/app.js",
 		"dev": "nodemon src/app.js",
+		"seed": "node src/seeders/index.js",
 		"build:css": "tailwindcss -i ./src/assets/css/main.css -o ./src/assets/css/output.css --watch"
 	},
 	"dependencies": {
 		"@asteasolutions/zod-to-openapi": "^8.2.0",
 		"@tailwindcss/cli": "^4.1.17",
 		"bcryptjs": "^3.0.3",
+		"cookie-parser": "^1.4.7",
 		"cors": "^2.8.5",
 		"dotenv": "^17.2.3",
 		"ejs": "^3.1.10",
@@ -25,6 +27,7 @@
 	"devDependencies": {
 		"cross-env": "^10.1.0",
 		"nodemon": "^3.1.11",
+		"supertest": "^7.1.4",
 		"tailwindcss": "^4.1.17"
 	}
 }
