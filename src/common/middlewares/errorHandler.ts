@@ -1,21 +1,19 @@
-import {
-    ZodError
-} from 'zod';
-import {
-    AppError
-} from '../utils/AppError.js';
+import { Request, Response, NextFunction } from 'express';
+import { ZodError } from 'zod';
+import { AppError } from '../utils/AppError.js';
 
-const handleZodError = (err) => {
+const handleZodError = (err: ZodError) => {
     const message = err.issues
         .map((issue) => `${issue.path.join('.')}: ${issue.message}`)
         .join(', ');
     return new AppError(message, 400);
 };
 
-const handleMongoDuplicateError = (err) => {
+const handleMongoDuplicateError = (err: any) => {
     try {
-        const field = err.keyValue ? Object.keys(err.keyValue)[0] : 'field';
-        const value = err.keyValue ? err.keyValue[field] : '';
+        const keys = err.keyValue ? Object.keys(err.keyValue) : [];
+        const field = keys[0] || 'field';
+        const value = err.keyValue ? (err.keyValue as any)[field] : '';
         const message = `Duplicate field value: ${field} (${value}). Please use another value!`;
         return new AppError(message, 409);
     } catch (e) {
@@ -23,7 +21,7 @@ const handleMongoDuplicateError = (err) => {
     }
 };
 
-export const globalErrorHandler = (err, req, res, next) => {
+export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
     // ensure we have statusCode and status
     err.statusCode = err.statusCode || 500;
     err.status = err.status || 'error';
@@ -41,7 +39,8 @@ export const globalErrorHandler = (err, req, res, next) => {
     // Production path – sanitize details
     let error = {
         ...err,
-        message: err.message
+        message: err.message,
+        isOperational: err.isOperational
     };
 
     if (err instanceof ZodError) error = handleZodError(err);

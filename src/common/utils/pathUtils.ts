@@ -12,8 +12,8 @@ import {
 
 
 // Get current directory of THIS file (utils folder)
-const __dirname = dirname(fileURLToPath(
-    import.meta.url));
+// @ts-ignore - import.meta is meta-property
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Navigate from common/utils -> common -> src -> project root
 const rootDir = path.resolve(__dirname, '..', '..', '..'); // cached once
@@ -23,7 +23,7 @@ const rootDir = path.resolve(__dirname, '..', '..', '..'); // cached once
  * Resolves a path relative to the project root directory.
  * Example: resolveFromRoot('src', 'views')
  */
-export const resolveFromRoot = (...paths) =>
+export const resolveFromRoot = (...paths: string[]) =>
     path.resolve(rootDir, ...paths);
 
 
@@ -31,7 +31,7 @@ export const resolveFromRoot = (...paths) =>
  * Get absolute path to `/src` directory
  * Example: getSrcPath('views') → /project/src/views
  */
-export const getSrcPath = (...paths) => {
+export const getSrcPath = (...paths: string[]) => {
     return resolveFromRoot('src', ...paths);
 };
 
@@ -40,7 +40,7 @@ export const getSrcPath = (...paths) => {
  * Get absolute path to `/src/views`
  * Example: getViewsPath('home.ejs') → /project/src/views/home.ejs
  */
-export const getViewsPath = (...paths) => {
+export const getViewsPath = (...paths: string[]) => {
     return getSrcPath('views', ...paths);
 };
 
@@ -49,6 +49,6 @@ export const getViewsPath = (...paths) => {
  * Get absolute path to `/src/assets`
  * Example: getAssetsPath('css')
  */
-export const getAssetsPath = (...paths) => {
+export const getAssetsPath = (...paths: string[]) => {
     return getSrcPath('assets', ...paths);
 };

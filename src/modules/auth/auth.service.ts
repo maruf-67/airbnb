@@ -1,19 +1,29 @@
 import bcrypt from 'bcryptjs';
-import {
-    AppError
-} from '../../common/utils/AppError.js';
-import User from './user.model.js';
+import { AppError } from '../../common/utils/AppError.js';
+import User, { UserDocument } from './user.model.js';
 import Role from '../role/role.model.js';
 import BlacklistedToken from '../../common/models/BlacklistedToken.js';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../../common/utils/jwt.js';
+import { LoginInput, RegisterInput } from './auth.schema.js';
 
-const generateAuthResponse = async (user, oldRefreshToken = null) => {
+interface AuthResponse {
+    user: UserDocument;
+    accessToken: string;
+    refreshToken: string;
+}
+
+interface TokenResponse {
+    accessToken: string;
+    refreshToken: string;
+}
+
+const generateAuthResponse = async (user: UserDocument, oldRefreshToken: string | null = null): Promise<AuthResponse> => {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
     // If rotating, remove old token
     if (oldRefreshToken) {
-        user.refreshTokens = user.refreshTokens.filter(t => t.token !== oldRefreshToken);
+        user.refreshTokens = user.refreshTokens.filter(t => t.token !== oldRefreshToken) as any;
     }
 
     // Save refresh token to user DB
@@ -22,12 +32,14 @@ const generateAuthResponse = async (user, oldRefreshToken = null) => {
 
     user.refreshTokens.push({
         token: refreshToken,
-        expiresAt: expiresAt
+        expiresAt: expiresAt,
+        // @ts-ignore - mongoose subdoc
+        _id: undefined
     });
 
     // Clean up expired tokens
-    user.refreshTokens = user.refreshTokens.filter(t => t.expiresAt > new Date());
-    
+    user.refreshTokens = user.refreshTokens.filter(t => t.expiresAt > new Date()) as any;
+
     await user.save();
 
     return {
@@ -37,7 +49,7 @@ const generateAuthResponse = async (user, oldRefreshToken = null) => {
     };
 };
 
-export const registerUser = async (data) => {
+export const registerUser = async (data: RegisterInput): Promise<AuthResponse> => {
     // Check for existing user
     const existing = await User.findOne({
         email: data.email.toLowerCase()
@@ -48,6 +60,7 @@ export const registerUser = async (data) => {
 
     let role = await Role.findOne({ name: 'user' });
     if (!role) {
+        // Create default user role if not exists
         role = await Role.create({ name: 'user', permissions: [] });
     }
 
@@ -58,13 +71,15 @@ export const registerUser = async (data) => {
         role: role._id
     });
 
-    delete user.password;
+    // Clean password from instance before returning (toJSON handles it but good to be safe)
+    user.password = undefined as any;
+
     await user.populate('role');
 
     return generateAuthResponse(user);
 };
 
-export const loginUser = async (email, password) => {
+export const loginUser = async (email: string, password: string): Promise<AuthResponse> => {
     const user = await User.findOne({
         email: email.toLowerCase()
     }).select('+password').populate('role');
@@ -77,7 +92,7 @@ export const loginUser = async (email, password) => {
     return generateAuthResponse(user);
 };
 
-export const logoutUser = async (userId, accessToken, currentRefreshToken) => {
+export const logoutUser = async (userId: string, accessToken: string, currentRefreshToken?: string): Promise<void> => {
     // 1. Blacklist Access Token
     await BlacklistedToken.create({ token: accessToken });
 
@@ -90,7 +105,7 @@ export const logoutUser = async (userId, accessToken, currentRefreshToken) => {
     }
 };
 
-export const refreshToken = async (token) => {
+export const refreshToken = async (token: string): Promise<TokenResponse> => {
     try {
         const decoded = verifyRefreshToken(token);
         const user = await User.findById(decoded.id).populate('role');
@@ -106,11 +121,12 @@ export const refreshToken = async (token) => {
         // Use helper to Rotate (remove old, add new), Clean, and Save
         const result = await generateAuthResponse(user, token);
 
-        return { 
-            accessToken: result.accessToken, 
-            refreshToken: result.refreshToken 
+        return {
+            accessToken: result.accessToken,
+            refreshToken: result.refreshToken
         };
     } catch (error) {
+        console.error("Refresh Token Error", error);
         throw new AppError('Invalid refresh token', 401);
     }
 };

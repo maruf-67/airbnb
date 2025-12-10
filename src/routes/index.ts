@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import authModuleRouter from '../modules/auth/auth.routes.js';
 import roleModuleRouter from '../modules/role/role.routes.js';
 // import userModuleRouter from '../modules/auth/user.routes.js';
@@ -15,21 +15,21 @@ apiV1Router.use('/roles', roleModuleRouter);
 router.use('/api/v1', apiV1Router);
 
 // Home page
-router.get('/', (req, res) => {
+router.get('/', (req: Request, res: Response) => {
     res.render('index', {
         title: 'Airbnb Clone - Home'
     });
 });
 
 // API Documentation page
-router.get('/docs', (req, res) => {
+router.get('/docs', (req: Request, res: Response) => {
     res.render('docs', {
         title: 'API Documentation'
     });
 });
 
 // Health check
-router.get('/health', (req, res) => {
+router.get('/health', (req: Request, res: Response) => {
     res.json({
         status: 'OK',
         timestamp: new Date().toISOString()

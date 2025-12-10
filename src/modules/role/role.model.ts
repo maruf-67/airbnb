@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { InferSchemaType } from 'mongoose';
 
 const roleSchema = new mongoose.Schema({
     name: {
@@ -28,4 +28,5 @@ const roleSchema = new mongoose.Schema({
     timestamps: true
 });
 
+export type RoleDocument = InferSchemaType<typeof roleSchema> & { _id: mongoose.Types.ObjectId; createdAt: Date; updatedAt: Date };
 export default mongoose.model('Role', roleSchema);

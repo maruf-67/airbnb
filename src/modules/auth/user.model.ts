@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { InferSchemaType, Model, Document } from 'mongoose';
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -64,7 +64,9 @@ userSchema.index({
 userSchema.methods.toJSON = function () {
     const userObject = this.toObject();
     delete userObject.password;
+    delete userObject.refreshTokens; // Also hide refreshTokens from public output
     return userObject;
 };
 
-export default mongoose.model('User', userSchema);
+export type UserDocument = InferSchemaType<typeof userSchema> & Document & { _id: mongoose.Types.ObjectId; createdAt: Date; updatedAt: Date };
+export default mongoose.model<UserDocument>('User', userSchema);

@@ -12,14 +12,14 @@ const runAllSeeders = async () => {
         const specificSeeder = args[0]; // e.g., 'RoleSeeder'
 
         // 2. Map of available Seeders
-        const seeders = {
+        const seeders: Record<string, () => Promise<void>> = {
             'RoleSeeder': seedRoles,
             'roleSeeder': seedRoles, // Case insensitive alias
             // Add future seeders here
         };
 
         // 3. Determine which seeders to run
-        let seedersToRun = [];
+        let seedersToRun: (() => Promise<void>)[] = [];
         if (specificSeeder) {
             if (seeders[specificSeeder]) {
                 console.log(`🎯 Targeted Seeder: ${specificSeeder}`);
@@ -31,7 +31,7 @@ const runAllSeeders = async () => {
         } else {
             // Run ALL by default
             seedersToRun = Object.values(seeders);
-             // Deduplicate if multiple keys point to same function (unlikely but safe)
+            // Deduplicate if multiple keys point to same function (unlikely but safe)
             seedersToRun = [...new Set(seedersToRun)];
         }
 
@@ -44,11 +44,11 @@ const runAllSeeders = async () => {
 
         // 5. Run Selected Seeders
         console.log('--- Starting Seeding Process ---');
-        
+
         for (const seeder of seedersToRun) {
             await seeder();
         }
-        
+
         console.log('--- Seeding Completed Successfully ---');
 
     } catch (error) {

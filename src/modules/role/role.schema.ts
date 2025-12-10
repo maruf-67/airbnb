@@ -18,3 +18,6 @@ export const updateRoleSchema = z.object({
     type: z.enum(['admin', 'user']).optional(),
     isActive: z.boolean().optional()
 });
+
+export type CreateRoleInput = z.infer<typeof createRoleSchema>;
+export type UpdateRoleInput = z.infer<typeof updateRoleSchema>;

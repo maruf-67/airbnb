@@ -30,14 +30,16 @@ export const PERMISSIONS = {
     // Settings
     SETTINGS_VIEW: 'settings.view',
     SETTINGS_UPDATE: 'settings.update',
-};
+} as const;
+
+export type Permission = typeof PERMISSIONS[keyof typeof PERMISSIONS];
 
 // Group permissions for easier assignment in Seeders
 export const PERMISSION_GROUPS = {
     SUPER_ADMIN: Object.values(PERMISSIONS),
-    
+
     // Admin has everything EXCEPT Role Management
     ADMIN: Object.values(PERMISSIONS).filter(p => !p.startsWith('role.')),
 
-    USER: []
+    USER: [] as Permission[]
 };

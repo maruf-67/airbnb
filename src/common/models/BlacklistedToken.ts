@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { InferSchemaType } from 'mongoose';
 
 const blacklistedTokenSchema = new mongoose.Schema({
     token: {
@@ -13,4 +13,5 @@ const blacklistedTokenSchema = new mongoose.Schema({
     }
 });
 
+export type BlacklistedToken = InferSchemaType<typeof blacklistedTokenSchema>;
 export default mongoose.model('BlacklistedToken', blacklistedTokenSchema);

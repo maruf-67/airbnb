@@ -2,7 +2,7 @@ import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Role from '../modules/role/role.model.js';
-import { PERMISSIONS, PERMISSION_GROUPS } from '../common/constants/permissions.js';
+import { PERMISSION_GROUPS } from '../common/constants/permissions.js';
 
 dotenv.config();
 
@@ -63,7 +63,7 @@ const seedRoles = async () => {
         process.exit(1);
     } finally {
         // Disconnect if we initiated the connection
-        if (process.argv[1] === import.meta.url) {
+        if (process.argv[1] === fileURLToPath(import.meta.url)) {
             await mongoose.disconnect();
             process.exit(0);
         }

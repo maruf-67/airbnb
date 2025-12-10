@@ -128,6 +128,7 @@ app.use(globalErrorHandler);
 // Successful MongoDB Connection
 // -------------------------------
 // Only start server if run directly (not imported)
+// Note: TS might complain about import.meta props if module settings aren't right, but NodeNext handles it.
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
     connectDB()
         .then(() => {

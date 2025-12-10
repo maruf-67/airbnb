@@ -16,7 +16,7 @@ const verifyRoutes = async () => {
         console.log('Connecting to DB for Route Verification...');
         // Ensure we are connected
         if (mongoose.connection.readyState === 0) {
-            await mongoose.connect(process.env.MONGO_URI);
+            await mongoose.connect(process.env.MONGO_URI as string);
         }
 
         // Cleanup
@@ -25,13 +25,13 @@ const verifyRoutes = async () => {
         await BlacklistedToken.deleteMany({});
 
         // 1. Setup Data
-        const adminRole = await Role.create({ 
-            name: 'admin', 
-            permissions: ['role.read', 'role.create', 'role.update', 'role.delete'] 
+        const adminRole = await Role.create({
+            name: 'admin',
+            permissions: ['role.read', 'role.create', 'role.update', 'role.delete']
         });
-        const userRole = await Role.create({ 
-            name: 'user', 
-            permissions: ['role.read'] 
+        const userRole = await Role.create({
+            name: 'user',
+            permissions: ['role.read']
         });
 
         const admin = await User.create({
@@ -52,7 +52,7 @@ const verifyRoutes = async () => {
         // Need to populate role for token generation as per our logic
         await admin.populate('role');
         await user.populate('role');
-        
+
         const adminToken = generateAccessToken(admin);
         const userToken = generateAccessToken(user);
 
