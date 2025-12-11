@@ -2,6 +2,7 @@ import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import seedRoles from './roleSeeder.js';
+import seedSuperAdmin from './superAdminSeeder.js';
 
 dotenv.config();
 
@@ -14,8 +15,9 @@ const runAllSeeders = async () => {
         // 2. Map of available Seeders
         const seeders: Record<string, () => Promise<void>> = {
             'RoleSeeder': seedRoles,
-            'roleSeeder': seedRoles, // Case insensitive alias
-            // Add future seeders here
+            'roleSeeder': seedRoles,
+            'SuperAdminSeeder': seedSuperAdmin,
+            'superAdminSeeder': seedSuperAdmin,
         };
 
         // 3. Determine which seeders to run

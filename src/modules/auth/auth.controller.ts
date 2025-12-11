@@ -53,3 +53,36 @@ export const refreshToken = catchAsync(async (req: Request, res: Response) => {
 
     sendSuccess(res, { accessToken });
 });
+
+export const me = catchAsync(async (req: Request, res: Response) => {
+    const authReq = req as AuthRequest;
+    sendSuccess(res, { user: AuthService.sanitizeUser(authReq.user) });
+});
+
+export const updateProfile = catchAsync(async (req: Request, res: Response) => {
+    const authReq = req as AuthRequest;
+    const userId = authReq.user._id.toString();
+    const user = await AuthService.updateProfile(userId, req.body);
+    sendSuccess(res, { user }, 'Profile updated successfully');
+});
+
+export const changePassword = catchAsync(async (req: Request, res: Response) => {
+    const authReq = req as AuthRequest;
+    const userId = authReq.user._id.toString();
+    const { currentPassword, newPassword } = req.body;
+
+    await AuthService.changePassword(userId, currentPassword, newPassword);
+    sendSuccess(res, null, 'Password changed successfully');
+});
+
+export const uploadAvatar = catchAsync(async (req: Request, res: Response) => {
+    const authReq = req as AuthRequest;
+    const userId = authReq.user._id.toString();
+
+    if (!req.file) {
+        throw new AppError('No file uploaded', 400);
+    }
+
+    const user = await AuthService.uploadAvatar(userId, req.file.filename);
+    sendSuccess(res, { user }, 'Avatar uploaded successfully');
+});

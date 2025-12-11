@@ -40,6 +40,9 @@ import {
 import {
     globalErrorHandler
 } from './common/middlewares/errorHandler.js';
+import {
+    contextMiddleware
+} from './common/middlewares/contextMiddleware.js';
 
 
 // -------------------------------
@@ -73,7 +76,15 @@ app.set('views', getViewsPath());
 // -------------------------------
 
 // Security headers (prevents common attacks)
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+            "img-src": ["'self'", "data:", "http://localhost:3009", "https:"],
+        },
+    },
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+}));
 
 // Enables cross-origin access (frontend → backend)
 app.use(cors());
@@ -89,6 +100,9 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(cookieParser());
+app.use(contextMiddleware);
+
+// app.set('trust proxy', true);
 
 
 // -------------------------------
@@ -97,6 +111,9 @@ app.use(cookieParser());
 
 // Serve static files from /assets folder
 app.use('/assets', express.static(getAssetsPath()));
+
+// Serve uploaded files (avatars, etc.)
+app.use('/uploads', express.static('public/uploads'));
 
 
 // -------------------------------
