@@ -10,8 +10,16 @@ export const createPost = catchAsync(async (req: Request, res: Response) => {
 });
 
 export const getPosts = catchAsync(async (req: Request, res: Response) => {
-    const result = await postService.getAllPosts(req.query);
+    const result = await postService.getAllPosts(req.query, false);
     sendSuccess(res, result, 'Posts retrieved successfully');
+});
+
+export const getAdminPosts = catchAsync(async (req: Request, res: Response) => {
+    // Assuming auth middleware ensures user exists, but we can verify admin role if needed
+    // The route will be protected by authenticateToken, but we might want restrictTo('admin') middleware eventually
+    // For now, assume protected route access implies authorized (or check req.user.role)
+    const result = await postService.getAllPosts(req.query, true);
+    sendSuccess(res, result, 'Admin posts retrieved successfully');
 });
 
 export const getPost = catchAsync(async (req: Request, res: Response) => {

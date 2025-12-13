@@ -1,8 +1,10 @@
+
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import seedRoles from './roleSeeder.js';
 import seedSuperAdmin from './superAdminSeeder.js';
+import seedPosts from './postSeeder.js';
 
 dotenv.config();
 
@@ -18,6 +20,8 @@ const runAllSeeders = async () => {
             'roleSeeder': seedRoles,
             'SuperAdminSeeder': seedSuperAdmin,
             'superAdminSeeder': seedSuperAdmin,
+            'PostSeeder': seedPosts,
+            'postSeeder': seedPosts,
         };
 
         // 3. Determine which seeders to run

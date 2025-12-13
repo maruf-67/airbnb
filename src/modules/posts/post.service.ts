@@ -10,15 +10,31 @@ export class PostService {
         return post;
     }
 
-    async getAllPosts(query: any) {
+    async getAllPosts(query: any, isAdmin: boolean = false) {
         const page = parseInt(query.page) || 1;
         const limit = parseInt(query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        const filter: any = { isPublished: true };
+        const filter: any = {};
 
+        // Publishing logic
+        if (!isAdmin) {
+            filter.isPublished = true;
+        } else {
+            if (query.isPublished !== undefined) {
+                filter.isPublished = query.isPublished === 'true';
+            }
+        }
+
+        // Search logic
         if (query.search) {
-            filter.$text = { $search: query.search };
+            const searchRegex = { $regex: query.search, $options: 'i' };
+            filter.$or = [
+                { title: searchRegex },
+                { location: searchRegex },
+                // Description might be too heavy for regex search on every request, keeping it to title/location for admin consistency
+                // If strictly text search is preferred: filter.$text = { $search: query.search };
+            ];
         }
 
         if (query.location) {
@@ -31,11 +47,22 @@ export class PostService {
             if (query.maxPrice) filter.price.$lte = parseFloat(query.maxPrice);
         }
 
+        // Search logic for specific fields can override generic search if needed
+
+        // Sorting
+        const sort: any = {};
+        if (query.sort) {
+            const order = query.order === 'asc' ? 1 : -1;
+            sort[query.sort] = order;
+        } else {
+            sort.createdAt = -1;
+        }
+
         const posts = await Post.find(filter)
-            .populate('owner', 'name avatar') // Populate basic owner info
+            .populate('owner', 'name avatar')
             .skip(skip)
             .limit(limit)
-            .sort({ createdAt: -1 });
+            .sort(sort);
 
         const total = await Post.countDocuments(filter);
 

@@ -40,6 +40,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
     refreshTokens: [{
         token: {
             type: String,
@@ -80,6 +84,7 @@ userSchema.methods.toJSON = function () {
     if (userObject.role && typeof userObject.role === 'object') {
         const roleFn = userObject.role;
         userObject.role = {
+            _id: roleFn._id,
             name: roleFn.name,
             title: roleFn.title,
             type: roleFn.type,

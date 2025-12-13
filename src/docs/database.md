@@ -23,8 +23,8 @@ This document defines the MongoDB database schema for the Airbnb clone using Mon
 - email: unique
 - createdAt: descending
 
-## Listing Collection
-**Collection Name**: listings
+## Post Collection
+**Collection Name**: posts
 
 | Field | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|

@@ -8,6 +8,11 @@ export const getUsers = catchAsync(async (req: Request, res: Response) => {
     sendSuccess(res, result, 'Users retrieved successfully');
 });
 
+export const createUser = catchAsync(async (req: Request, res: Response) => {
+    const user = await userService.createUser(req.body);
+    sendSuccess(res, user, 'User created successfully', 201);
+});
+
 export const getUser = catchAsync(async (req: Request, res: Response) => {
     const user = await userService.getUserById(req.params.id as string);
     sendSuccess(res, user, 'User retrieved successfully');

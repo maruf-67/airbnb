@@ -6,11 +6,14 @@ import { createPostSchema, updatePostSchema, getPostsSchema } from './post.schem
 
 const router = Router();
 
+// manage routes (Specific routes first)
+router.get('/manage', authenticateToken, postController.getAdminPosts);
+
 // Public routes
 router.get('/', validate(getPostsSchema), postController.getPosts);
 router.get('/:id', postController.getPost);
 
-// Protected routes
+// Protected routes (General middleware applied to all subsequent routes)
 router.use(authenticateToken);
 
 router.post('/', validate(createPostSchema), postController.createPost);

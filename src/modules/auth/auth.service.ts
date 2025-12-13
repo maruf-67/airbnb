@@ -33,6 +33,8 @@ export const sanitizeUser = (user: UserDocument) => {
     if (userObject.role && typeof userObject.role === 'object') {
         const roleFn = userObject.role as any;
         userObject.role = {
+            _id: roleFn._id,
+            id: roleFn.id,
             name: roleFn.name,
             title: roleFn.title,
             type: roleFn.type,
@@ -75,7 +77,7 @@ const generateAuthResponse = async (user: UserDocument, oldRefreshToken: string 
     };
 };
 
-export const registerUser = async (data: RegisterInput): Promise<AuthResponse> => {
+export const registerUser = async (data: RegisterInput['body']): Promise<AuthResponse> => {
     // Check for existing user
     const existing = await User.findOne({
         email: data.email.toLowerCase()
@@ -170,7 +172,7 @@ export const updateProfile = async (userId: string, data: { name?: string; email
     // Update allowed fields
     if (data.name) user.name = data.name.trim();
     if (data.email) user.email = data.email.toLowerCase().trim();
-    if (data.phone !== undefined) user.phone = data.phone.trim() || null;
+    if (data.phone !== undefined) user.phone = data.phone.trim() || null as any;
     // Note: bio field doesn't exist in model, but we'll allow it to pass through
 
     await user.save();
