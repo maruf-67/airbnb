@@ -5,12 +5,6 @@
 		},
 		{
 			"path": "../../Next/airbnb-front"
-		},
-		{
-			"path": "../../../../../var/www/laravel/PetFood/pet-food-front"
-		},
-		{
-			"path": "../../Next/cureanix-admin"
 		}
 	],
 	"settings": {}
