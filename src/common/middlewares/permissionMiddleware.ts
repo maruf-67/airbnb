@@ -33,18 +33,6 @@ export const checkPermission = (...requiredPermissions: string[]) => {
             return next();
         }
 
-        // Also check if role is 'admin' (generic) just in case, but rely on perms preferably.
-        // Keeping previous logic:
-        if (req.user.role && req.user.role.type === 'admin') {
-            // Maybe allow? Or stick to strict perms?
-            // User requested "Admin without the role management all permisssion".
-            // So we should NOT globally auto-approve 'admin' unless they have the perm.
-            // But 'super_admin' should definitely pass.
-            if (req.user.role.name === 'admin' && !requiredPermissions.some(p => p.startsWith('role.'))) {
-                return next();
-            }
-        }
-
         // 4. Check for intersection
         const hasPermission = userPermissions.some(permission =>
             requiredPermissions.includes(permission)

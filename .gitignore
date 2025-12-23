@@ -21,3 +21,6 @@ node_modules/
 
 # css
 /src/assets/css/output.css
+
+# uploads
+/public/uploads

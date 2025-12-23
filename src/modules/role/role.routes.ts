@@ -11,6 +11,7 @@ const router = express.Router();
 router.use(authenticateToken);
 
 router.post('/', checkPermission('role.create'), validate(createRoleSchema), RoleController.createRole);
+router.get('/permissions', authenticateToken, RoleController.getPermissions); // Public-ish for authenticated users to see available perms
 router.get('/', checkPermission('role.read'), RoleController.getRoles);
 router.get('/:id', checkPermission('role.read'), RoleController.getRole);
 router.patch('/:id', checkPermission('role.update'), validate(updateRoleSchema), RoleController.updateRole);

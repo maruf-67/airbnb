@@ -7,7 +7,7 @@ import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '.
 import { LoginInput, RegisterInput } from './auth.schema.js';
 
 interface AuthResponse {
-    user: UserDocument;
+    user: any;
     accessToken: string;
     refreshToken: string;
 }
@@ -16,6 +16,34 @@ interface TokenResponse {
     accessToken: string;
     refreshToken: string;
 }
+
+export const sanitizeUser = (user: UserDocument) => {
+    const userObject = user.toObject();
+
+    // Explicitly delete sensitive fields
+    delete userObject.password;
+    delete userObject.refreshTokens;
+    delete userObject.__v;
+    delete userObject.updated_ip;
+    delete userObject.created_ip;
+    delete userObject.created_by;
+    delete userObject.updated_by;
+
+    // Flatten role object
+    if (userObject.role && typeof userObject.role === 'object') {
+        const roleFn = userObject.role as any;
+        userObject.role = {
+            _id: roleFn._id,
+            id: roleFn.id,
+            name: roleFn.name,
+            title: roleFn.title,
+            type: roleFn.type,
+            permissions: roleFn.permissions
+        };
+    }
+
+    return userObject;
+};
 
 const generateAuthResponse = async (user: UserDocument, oldRefreshToken: string | null = null): Promise<AuthResponse> => {
     const accessToken = generateAccessToken(user);
@@ -43,13 +71,13 @@ const generateAuthResponse = async (user: UserDocument, oldRefreshToken: string 
     await user.save();
 
     return {
-        user,
+        user: sanitizeUser(user),
         accessToken,
         refreshToken
     };
 };
 
-export const registerUser = async (data: RegisterInput): Promise<AuthResponse> => {
+export const registerUser = async (data: RegisterInput['body']): Promise<AuthResponse> => {
     // Check for existing user
     const existing = await User.findOne({
         email: data.email.toLowerCase()
@@ -129,4 +157,49 @@ export const refreshToken = async (token: string): Promise<TokenResponse> => {
         console.error("Refresh Token Error", error);
         throw new AppError('Invalid refresh token', 401);
     }
+};
+
+export const updateProfile = async (userId: string, data: { name?: string; email?: string; phone?: string; bio?: string }): Promise<any> => {
+    const user = await User.findById(userId).populate('role');
+    if (!user) throw new AppError('User not found', 404);
+
+    // Check if email is being changed and if it's already taken
+    if (data.email && data.email.toLowerCase() !== user.email) {
+        const existing = await User.findOne({ email: data.email.toLowerCase() });
+        if (existing) throw new AppError('Email already in use', 409);
+    }
+
+    // Update allowed fields
+    if (data.name) user.name = data.name.trim();
+    if (data.email) user.email = data.email.toLowerCase().trim();
+    if (data.phone !== undefined) user.phone = data.phone.trim() || null as any;
+    // Note: bio field doesn't exist in model, but we'll allow it to pass through
+
+    await user.save();
+
+    return sanitizeUser(user);
+};
+
+export const changePassword = async (userId: string, currentPassword: string, newPassword: string): Promise<void> => {
+    const user = await User.findById(userId).select('+password');
+    if (!user) throw new AppError('User not found', 404);
+
+    // Verify current password
+    const isValidPassword = await bcrypt.compare(currentPassword, user.password);
+    if (!isValidPassword) throw new AppError('Current password is incorrect', 401);
+
+    // Hash and save new password
+    user.password = await bcrypt.hash(newPassword, 12);
+    await user.save();
+};
+
+export const uploadAvatar = async (userId: string, filename: string): Promise<any> => {
+    const user = await User.findById(userId).populate('role');
+    if (!user) throw new AppError('User not found', 404);
+
+    // Update avatar path
+    user.avatar = `/uploads/avatars/${filename}`;
+    await user.save();
+
+    return sanitizeUser(user);
 };

@@ -1,82 +1,74 @@
-# Airbnb Clone Backend - Planning and Workflow
+# Airbnb Clone - Planning and Workflow
 
 ## Overview
-This document outlines the detailed step-by-step plan for building a basic Airbnb clone API using Express.js, focusing on learning Express.js, JWT authentication, and MongoDB. The project includes minimal views (home, error, API docs) styled with Tailwind CSS, with the main frontend handled by Next.js.
+This document outlines the development plan for the Airbnb clone, consisting of a **TypeScript Express.js Backend** and a **Next.js 16 Frontend**.
+
+## Tech Stack
+- **Backend**: Express.js, TypeScript, MongoDB (Mongoose), Redis (Caching), Zod (Validation).
+- **Frontend**: Next.js 16 (App Router), React 19, Tailwind CSS v4, Heroicons.
+- **Tools**: Docker, ESLint, Prettier, Postman.
 
 ## Current Status
-- ✅ Project skeleton set up with Express.js, MongoDB (Mongoose), Docker
-- ✅ Basic folder structure (controllers, models, routes, etc.)
-- ✅ Environment configuration (.env)
-- ✅ Package.json with dependencies
-- ✅ Views setup (EJS + Tailwind) - Completed
-- ⏳ JWT Authentication - Not started
-- ⏳ Listings CRUD - Not started
-- ⏳ Bookings system - Not started
-- ⏳ Testing setup - Not started
-- ⏳ API Documentation - Not started
+
+### Backend (`airbnb-express`)
+- ✅ **Setup**: TypeScript + Express configured (`tsconfig.json`, `package.json`).
+- ✅ **Modules Implemented**:
+  - `auth`: Registration, Login (JWT).
+  - `users`: User management.
+  - `role`: Role-based access control (RBAC).
+  - `posts`: Listings management (renamed from Listings to Posts).
+  - `pricing`: Pricing logic.
+- ✅ **Docs**: API Docs partially set up.
+- ⏳ **Bookings**: Not started.
+- ⏳ **Reviews**: Not started.
+- ⏳ **Tests**: Unit/Integration tests pending.
+
+### Frontend (`airbnb-front`)
+- ✅ **Setup**: Next.js 16 + Tailwind v4 initialized.
+- ✅ **Structure**:
+  - `(public)`: Home page (`page.tsx`) fetching posts.
+  - `(admin)`: Admin panel structure.
+- ✅ **Components**: `ListingCard`, `AirbnbNav`, `AirbnbSearch`, `AdminSidebar`.
+- ⏳ **Integrations**: Full Auth integration, Booking flow, User Dashboard.
 
 ## Detailed Step-by-Step Plan
 
-### Phase 1: Setup and Views (Foundation)
-1. **Install view dependencies**: Add EJS and Tailwind CSS to package.json
-2. **Configure EJS in app.js**: Set view engine, static files for Tailwind
-3. **Create basic views**:
-   - `views/index.ejs`: Home page with welcome message and links
-   - `views/error.ejs`: Error page for 404/500 with Tailwind styling
-   - `views/docs.ejs`: API documentation page (initially manual, later auto-generated)
-4. **Update routes**: Add routes for home (/) and error handling
-5. **Test views**: Ensure pages render correctly with Tailwind styles
+### Phase 1: Foundation (Completed)
+- [x] Project skeletons (Backend & Frontend).
+- [x] Database connection (MongoDB, Redis).
+- [x] Basic Views/Routes setup.
 
-### Phase 2: Authentication System
-6. **Install auth dependencies**: Add bcryptjs, jsonwebtoken, joi for validation
-7. **Create User model**: Define schema in `src/models/User.js` with email, password, name, etc.
-8. **Create auth controller**: Implement register, login functions in `src/controllers/authController.js`
-9. **Create auth routes**: Set up `/api/auth/register` and `/api/auth/login` in `src/routes/auth.js`
-10. **Add JWT middleware**: Create `src/middlewares/auth.js` for protecting routes
-11. **Test authentication**: Manual testing with Postman, verify tokens
+### Phase 2: Core Backend Features (Mostly Completed)
+- [x] **Auth Module**: JWT, Bcrypt, Middleware.
+- [x] **RBAC**: Role management.
+- [x] **Posts (Listings)**: CRUD operations (`post.controller.ts`).
+- [ ] **Bookings**: Implement booking logic and collision detection.
+- [ ] **Reviews**: Add review schema and controllers.
 
-### Phase 3: Listings CRUD
-12. **Create Listing model**: Define schema in `src/models/Listing.js` with title, description, price, location, etc.
-13. **Create listing controller**: Implement CRUD operations in `src/controllers/listingController.js`
-14. **Create listing routes**: Set up `/api/listings` endpoints (GET, POST, PUT, DELETE) in `src/routes/listings.js`
-15. **Add validation**: Use Joi for input validation in controllers
-16. **Test listings**: CRUD operations, ensure auth protection where needed
+### Phase 3: Frontend Implementation (In Progress)
+- [x] **Home Page**: Display listings from API.
+- [ ] **Auth Pages**: Login/Register UI integration with Backend.
+- [ ] **Listing Details**: Single post view with images and map.
+- [ ] **Booking Flow**: UI for selecting dates and guests.
+- [ ] **Admin Panel**: Manage users, posts, and bookings.
 
-### Phase 4: Bookings System
-17. **Create Booking model**: Define schema in `src/models/Booking.js` linking users and listings with dates
-18. **Create booking controller**: Implement create, view, cancel bookings in `src/controllers/bookingController.js`
-19. **Create booking routes**: Set up `/api/bookings` endpoints with auth middleware
-20. **Add business logic**: Check availability, prevent double-bookings in services
-21. **Test bookings**: Full booking flow, conflict resolution
+### Phase 4: Advanced Features & Polish
+- [ ] **Search & Filters**: Advanced querying (Location, Price, Amenities).
+- [ ] **Image Upload**: S3 or local upload handling.
+- [ ] **Payment**: Stripe/PayPal mock integration.
 
-### Phase 5: Testing and Documentation
-22. **Setup testing framework**: Install Jest, Supertest; create `tests/` folder
-23. **Write unit tests**: Test models, controllers, middleware
-24. **Write integration tests**: Test full API endpoints
-25. **Setup API documentation**: Install Swagger; configure in `src/routes/docs.js`
-26. **Generate docs**: Auto-document all API endpoints with examples
-27. **Update views**: Integrate Swagger UI into docs page
-
-### Phase 6: Finalization and Deployment Prep
-28. **Add error handling**: Enhance middleware for better error responses
-29. **Add logging**: Implement Morgan for request logging
-30. **Security enhancements**: Add Helmet, CORS, rate limiting
-31. **Environment configs**: Separate dev/prod configs
-32. **Final testing**: Run full test suite, manual QA
-33. **Documentation**: Update README, API docs, deployment guide
+### Phase 5: Testing & Deployment
+- [ ] **Backend Tests**: Jest + Supertest.
+- [ ] **Frontend Tests**: React Testing Library / Playwright.
+- [ ] **CI/CD**: GitHub Actions.
+- [ ] **Deployment**: Vercel (Frontend) + VPS/Cloud (Backend).
 
 ## Workflow Guidelines
-- **Daily Workflow**: Start with `pnpm run dev`, check MongoDB with `docker-compose up`
-- **Testing**: Manual test with Postman first, then automate
-- **Commits**: Commit after each phase completion
-- **Learning Focus**: Spend time understanding each concept before moving to next
-- **Time Management**: Allocate 1-2 hours per phase to avoid burnout
+- **Language**: Use **TypeScript** for both Backend and Frontend.
+- **Backend**: Follow feature-based module structure (`src/modules/*`).
+- **Frontend**: Use server components where possible, client components for interactivity.
+- **Commits**: Conventional Commits (e.g., `feat: add booking module`).
 
-## Dependencies to Install
-- Views: ejs, tailwindcss
-- Auth: bcryptjs, jsonwebtoken, joi
-- Testing: jest, supertest
-- Docs: swagger-ui-express, swagger-jsdoc
-
-## Next Steps
-Phase 1 completed successfully! Begin with Phase 2: Authentication System. Start by installing auth dependencies (bcryptjs, jsonwebtoken, joi).
+## Dependencies
+- **Backend**: `express`, `mongoose`, `zod`, `jsonwebtoken`, `bcryptjs`, `@asteasolutions/zod-to-openapi`.
+- **Frontend**: `next`, `react`, `tailwindcss`, `axios`/`fetch`.

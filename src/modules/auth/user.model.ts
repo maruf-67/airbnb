@@ -1,4 +1,5 @@
 import mongoose, { InferSchemaType, Model, Document } from 'mongoose';
+import { auditPlugin } from '../../common/models/plugins/auditPlugin.js';
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -39,6 +40,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
     refreshTokens: [{
         token: {
             type: String,
@@ -57,14 +62,36 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 });
 
+userSchema.plugin(auditPlugin);
+
 userSchema.index({
     createdAt: -1
 });
 
 userSchema.methods.toJSON = function () {
     const userObject = this.toObject();
+
+    // Remove sensitive fields
     delete userObject.password;
-    delete userObject.refreshTokens; // Also hide refreshTokens from public output
+    delete userObject.refreshTokens;
+    delete userObject.__v;
+    delete userObject.updated_ip;
+    delete userObject.created_ip;
+    delete userObject.created_by;
+    delete userObject.updated_by;
+
+    // Clean up role if populated
+    if (userObject.role && typeof userObject.role === 'object') {
+        const roleFn = userObject.role;
+        userObject.role = {
+            _id: roleFn._id,
+            name: roleFn.name,
+            title: roleFn.title,
+            type: roleFn.type,
+            permissions: roleFn.permissions
+        };
+    }
+
     return userObject;
 };
 

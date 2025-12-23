@@ -4,6 +4,7 @@ import { verifyAccessToken } from '../utils/jwt.js';
 import User from '../../modules/auth/user.model.js';
 import BlacklistedToken from '../models/BlacklistedToken.js';
 import { catchAsync } from '../utils/catchAsync.js';
+import { requestContext } from '../utils/requestContext.js';
 
 export interface AuthRequest extends Request {
     user?: any;
@@ -34,6 +35,13 @@ export const authenticateToken = catchAsync(async (req: Request, res: Response, 
 
         (req as AuthRequest).user = user;
         (req as AuthRequest).token = token; // Store token for logout
+
+        // Update request context
+        const store = requestContext.get();
+        if (store) {
+            store.user = user;
+        }
+
         next();
     } catch (error: any) {
         console.error('Jwt Error:', error);

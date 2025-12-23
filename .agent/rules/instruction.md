@@ -57,6 +57,7 @@ You MUST follow these rules when working on this project.
 **Conventions**:
 - **Components**: PascalCase filenames (e.g., `AirbnbNav.tsx`).
 - **Structure**: Keep components small and focused.
+- **Check**: Make sure to use pnpm-type check on all node project and fix the issues after every update.
 - **Icons**: Use SVG icons (e.g., Heroicons or custom SVGs) as separate components or inline if simple.
 
 ## 4. Workflow
